@@ -7,7 +7,7 @@ import mathutils
 CubeName = "Stone"
 CubeSize = 1
 CubeHalf = CubeSize / 2
-PyramideDepth = 7
+PyramideDepth = 25
 scn = bpy.context.scene
 
 
