@@ -2,35 +2,57 @@ import bpy
 import bmesh
 import mathutils
 
+# === Definitions ===
 
-def create_pyramide(height):
-    print("Hello! Please create an object with the name 'Stone' and run the script")
-    Stone = bpy.data.objects["Stone"]
+def CubeName():
+    return "Stone"  
 
-    # Create stones of one side    
-    for z in range(1, height):
-        for y in range(0, z):
-            #print (y, z) 
-            print (-0.5*z+y, -z)          
-            Stone.select = True
-            Stone.location = mathutils.Vector((0.5*z, -0.5*z+y, -z))
-            bpy.ops.object.duplicate()
+def CubeSize():
+    return 1  
+
+def CubeHalf():
+    return CubeSize() / 2   
+
+def PyramideDepth():
+    return 1
+ 
+
+# === Logic ===
+
+def create_pyramide():
+    create_cube()
+    create_side()
+    '''join_objects(True)
+    duplicate_side()
+    join_objects(False)
+    apply_modifiers()'''
     
-    join_objects(True)
+    
+def create_side():    
+    Stone = bpy.data.objects[CubeName()]
+  
+    for z in range(1, PyramideDepth()):
+        for y in range(0, z): 
+            Stone.select = True
+            Stone.location = mathutils.Vector((CubeHalf()*z, -CubeHalf()*z+y, -z))
+            bpy.ops.object.duplicate()
+            bpy.ops.object.select = False #TODO deselect not working
 
-    # Duplicate and Rotate objects
-    Stone = bpy.data.objects["Stone"]
+    
+def duplicate_side():
+    print ("dupli")   
+    Stone = bpy.data.objects[CubeName()]
     Stone.select = True
+    
     for x in range(0, 3):
+        print(x)
         bpy.ops.object.duplicate()
         bpy.ops.transform.rotate(value=-1.5708, axis=(-0, -0, -1))
-    
-    join_objects(False)
-    
+
 
 def join_objects(ignoreTopStone):
     for ob in bpy.context.scene.objects:
-        if ob.type == 'MESH' and (not ignoreTopStone or ob.name != 'Top_Stone'):
+        if ob.type == 'MESH' and (not ignoreTopStone or ob.name != CubeName() + '.001'):
             ob.select = True
             bpy.context.scene.objects.active = ob
         else:
@@ -38,4 +60,21 @@ def join_objects(ignoreTopStone):
     bpy.ops.object.join()
     bpy.ops.object.transform_apply(location=True, rotation=False, scale=False)    
     
-create_pyramide(10)    
+    
+def create_cube():
+    bpy.ops.mesh.primitive_cube_add(
+        radius=CubeHalf(), 
+        location=(0, 0, 0)
+    )
+    NewObject = bpy.context.active_object
+    NewObject.name = CubeName()
+    bpy.ops.object.duplicate()  
+
+
+def apply_modifiers():
+    bpy.ops.object.editmode_toggle()
+    bpy.ops.mesh.remove_doubles()
+    bpy.ops.transform.vertex_random()
+    
+
+create_pyramide() 
