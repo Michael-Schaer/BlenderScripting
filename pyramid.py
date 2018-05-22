@@ -7,14 +7,14 @@ import mathutils
 CubeName = "Stone"
 CubeSize = 1
 CubeHalf = CubeSize / 2
-PyramidDepth = 25
+PyramideDepth = 25
 Degree90Rad = 1.5707963268
 scn = bpy.context.scene
 
 
 # === Logic ===
 
-def create_pyramid():
+def create_pyramide():
     create_cube()
     create_side()
     join_objects(True)
@@ -26,7 +26,7 @@ def create_pyramid():
 def create_side():
     Stone = bpy.data.objects[CubeName]
       
-    for z in range(1, PyramidDepth):
+    for z in range(1, PyramideDepth):
         for y in range(0, z): 
             print(z,y)
             Stone.select = True
@@ -80,4 +80,4 @@ def apply_modifiers():
     bpy.ops.transform.vertex_random()
     
 
-create_pyramid() 
+create_pyramide() 
